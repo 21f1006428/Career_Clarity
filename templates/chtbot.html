@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Chatbot</title>
+    <style>
+        /* Chatbot widget CSS styles */
+        #chatbot-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            display: none;
+            font-family: Arial, sans-serif;
+            z-index: 9999;
+        }
+
+        #chatbot-header {
+            font-weight: bold;
+            padding: 15px;
+            background-color: #6c63ff;
+            color: #fff;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            cursor: move;
+            user-select: none;
+        }
+
+        #chatbot-content {
+            height: 210px; /* Adjust the height based on the available space */
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        #chatbot-messages {
+            margin-bottom: 10px;
+        }
+
+        #user-input-container {
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #ccc;
+        }
+
+        #user-input {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #minimize-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            font-size: 20px;
+            color: #fff;
+            background-color: #6c63ff;
+            border-radius: 50%;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* Extra styling for the minimize button */
+        #minimize-button:hover {
+            background-color: #4e48d2;
+        }
+
+        #minimize-button:active {
+            background-color: #322da8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Chatbot widget HTML code -->
+    <div id="chatbot-widget">
+        <div id="chatbot-header">Chatbot</div>
+        <div id="chatbot-content">
+            <div id="chatbot-messages"></div>
+        </div>
+        <div id="user-input-container">
+            <input type="text" id="user-input" placeholder="Type your message...">
+        </div>
+        <div id="minimize-button">-</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.8.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/universal-sentence-encoder@2.8.1"></script>
+    <script>
+        // Define a dictionary of job-related questions and corresponding answers
+        var job_questions = {
+            "search for job openings?": "You can search for job openings by visiting our website's careers page and using the search functionality to find relevant positions.",
+            "current job openings?": "We have various job openings available in different departments. Please visit our website's careers page to view the current job listings.",
+            // Add more questions and answers as needed
+        };
+
+        // Load the Universal Sentence Encoder model
+        async function loadModel() {
+            return await use.load();
+        }
+
+        // Define a function to calculate the similarity between user input and predefined questions
+        async function calculateSimilarity(userInput, model) {
+            const embeddings = await model.embed([userInput.toLowerCase(), ...Object.keys(job_questions).map(q => q.toLowerCase())]);
+            const userEmbedding = embeddings.slice(0, 1);
+            const questionEmbeddings = embeddings.slice(1);
+
+            const similarities = await tf.metrics.cosineSimilarity(userEmbedding, questionEmbeddings);
+            const argmax = await tf.argMax(similarities).data();
+            const index = argmax[0];
+
+            return Object.keys(job_questions)[index];
+        }
+
+        // Define a function to handle user input and generate responses
+        async function generateResponse(userInput, model) {
+            userInput = userInput.toLowerCase();
+            const closestQuestion = await calculateSimilarity(userInput, model);
+            const response = job_questions[closestQuestion] || "I'm sorry, I don't have the information to answer that question at the moment.";
+
+            return response;
+        }
+
+        // Main code to control chatbot widget visibility and functionality
+        document.addEventListener("DOMContentLoaded", async function () {
+            const model = await loadModel();
+
+            setTimeout(function () {
+                var chatbotWidget = document.getElementById("chatbot-widget");
+                chatbotWidget.style.display = "block";
+            }, 1000);
+
+            var minimizeButton = document.getElementById("minimize-button");
+            minimizeButton.addEventListener("click", function () {
+                var chatbotContent = document.getElementById("chatbot-content");
+                var userInputContainer = document.getElementById("user-input-container");
+
+                if (chatbotContent.style.display === "none") {
+                    chatbotContent.style.display = "block";
+                    userInputContainer.style.display = "block";
+                    minimizeButton.innerHTML = "-";
+                } else {
+                    chatbotContent.style.display = "none";
+                    userInputContainer.style.display = "none";
+                    minimizeButton.innerHTML = "+";
+                }
+            });
+
+            var userInput = document.getElementById("user-input");
+            userInput.addEventListener("keydown", async function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    var userMessage = userInput.value.trim();
+                    userInput.value = "";
+
+                    if (userMessage !== "") {
+                        var chatbotMessages = document.getElementById("chatbot-messages");
+                        var userMessageElement = document.createElement("div");
+                        userMessageElement.className = "user-message";
+                        userMessageElement.innerHTML = "<strong>You:</strong> " + userMessage;
+                        chatbotMessages.appendChild(userMessageElement);
+
+                        var chatbotMessageElement = document.createElement("div");
+                        chatbotMessageElement.className = "chatbot-message";
+                        chatbotMessageElement.innerHTML = "<strong>Chatbot:</strong> " + await generateResponse(userMessage, model);
+                        chatbotMessages.appendChild(chatbotMessageElement);
+
+                        var chatbotContent = document.getElementById("chatbot-content");
+                        chatbotContent.scrollTop = chatbotContent.scrollHeight;
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

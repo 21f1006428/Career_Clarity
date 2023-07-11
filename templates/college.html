@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>10 Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: linear-gradient(to bottom right, #003399, #66ccff);
+      margin: 0;
+      padding: 0;
+    }
+
+    .heading {
+      text-align: center;
+      margin-top: 50px;
+      color: #ffffff;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      color: #333333;
+    }
+    .success-message {
+    color: red;}
+
+    .container {
+      width: 400px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      margin-top: 30px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333333;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    select,
+    input {
+      margin-bottom: 10px;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: #ffffff;
+      border: none;
+      padding: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="heading">
+    <h1>Career Clarity</h1>
+    <p style="color: #000000;">Find Your Perfect Career</p> <!-- Updated to black color using inline style -->
+  </div>
+  <div class="container">
+    <h2>Details</h2>
+    {% if message %}
+    <p class="success-message">{{ message }}</p>
+    {% endif %}
+     <script>
+      // Clear the form data
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.history.replaceState) {
+          window.history.replaceState(null, null, window.location.href);
+        }
+        var form = document.querySelector('.10-form');
+        form.reset();
+      });
+    </script>
+    <form class="10-form" method="POST" action="/college" autocomplete="off">
+      <input type="text" name="name" placeholder="Name" required>
+      <input type="numeric" name="mobile" placeholder="Mobile" required>
+      <input type="text" name="email" placeholder="E-mail" required>
+      <select name="stream" required>
+        <option value="" disabled selected>Select Interested Stream</option>
+        <option value="engineer">Engineer</option>
+        <option value="commerce">Commerce</option>
+        <option value="others">Others</option>
+      </select>
+      <select name="qualification" required>
+        <option value="" disabled selected>Select Qualification</option>
+        <option value="pursuing">Pursuing</option>
+        <option value="graduated">Graduated</option>
+        <option value="others">Others</option>
+      </select>
+    
+      <input type="text" name="query" placeholder="Query" required>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</body>
+</html>

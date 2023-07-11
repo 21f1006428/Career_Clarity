@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Professional Personality Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #79e689;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #FFFFFF;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      font-size: 24px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .question {
+      margin-bottom: 20px;
+    }
+
+    .question p {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .option {
+      width: 50%;
+      padding: 10px;
+      border-radius: 4px;
+      background-color: #F1F1F1;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+
+    .option:hover {
+      background-color: #E0E0E0;
+    }
+
+    .option.selected {
+      background-color: #6C63FF;
+      color: #FFFFFF;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .submit-button {
+      padding: 10px 20px;
+      background-color: #6C63FF;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .submit-button:hover {
+      background-color: #4E48D2;
+    }
+
+    .result-container {
+      margin-top: 40px;
+    }
+
+    .result-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .logout-link {
+  position: relative;
+  top: 10px;
+  right: 10px;
+  padding: 10px 15px;
+  background-color: #333333;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.logout-link:hover {
+  background-color: #555555;
+}
+
+.logout-link:active {
+  background-color: #222222;
+}
+
+    .result-description {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .popup {
+      background-color: #FFFFFF;
+      padding: 20px;
+      border-radius: 5px;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .personality-type {
+      color: red;
+      font-size: 18px;
+    }
+
+    .close-button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #6C63FF;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .close-button:hover {
+      background-color: #4E48D2;
+    }
+    .quote-container {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .quote-line {
+      font-size: 40px;
+      font-weight: normal;
+      font-family: cursive;
+      color: #ffffff;
+      margin-bottom: 5px;
+      font-style: italic;
+    }
+    .personality-test {
+      position: absolute;
+      bottom: 44px;
+      left: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      color: #ffffff;
+      background-color: #6c63ff;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+      z-index: 999;
+    }
+
+    .personality-test:hover {
+      background-color: #4e48d2;
+    }
+.card-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .card {
+      position: absolute;
+      width: 150px;
+      padding: 20px;
+      background-color: #FFFFFF;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .card.hidden {
+      display: none;
+    }
+
+    .card-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: center;
+      color: #333333;
+    }
+
+    .card-details {
+      font-size: 16px;
+      margin-bottom: 10px;
+      text-align: center;
+      color: #666666;
+    }
+
+    .card-image {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="quote-container">
+    <h2 class="quote-line" style="margin-bottom: 5px;">Take a</h2>
+    <h2 class="quote-line">One Step</h2>
+    <h2 class="quote-line">Ahead</h2>
+    <h2 class="quote-line">In Carrer</h2>
+    <div class="card-container">
+    <div class="card">
+      <h2 class="card-title">Upcoming Internship 1</h2>
+      <div class="card-details">
+        <p>Company: XYZ Corporation</p>
+        <p>Duration: 3 months</p>
+        <p>Location: City, Country</p>
+        <p>Application Deadline: August 31, 2023</p>
+      </div>
+      <div class="next-internship" onclick="nextInternship()">&gt;</div>
+    </div>
+
+    <div class="card hidden">
+      <h2 class="card-title">Upcoming Internship 2</h2>
+      <div class="card-details">
+        <p>Company: ABC Corporation</p>
+        <p>Duration: 6 months</p>
+        <p>Location: City, Country</p>
+        <p>Application Deadline: September 30, 2023</p>
+      </div>
+      <div class="next-internship" onclick="nextInternship()">&gt;</div>
+    </div>
+
+    <div class="card hidden">
+      <h2 class="card-title">Upcoming Internship 3</h2>
+      <div class="card-details">
+        <p>Company: DEF Corporation</p>
+        <p>Duration: 4 months</p>
+        <p>Location: City, Country</p>
+        <p>Application Deadline: October 31, 2023</p>
+      </div>
+      <div class="next-internship" onclick="nextInternship()">&gt;</div>
+    </div>
+  </div>
+</div>
+  <div class="container">
+    <h1>Professional Personality Test</h1>
+    <form id="personality-form" action="/process-form" method="POST">
+      <div class="question">
+        <p>Question 1: How do you handle stressful situations at work?</p>
+        <div class="options">
+          <label>
+            <input type="radio" name="question1" value="a">
+            a) I stay calm and focus on problem-solving.
+          </label>
+          <br>
+          <label>
+            <input type="radio" name="question1" value="b">
+            
+            b) I take a break and come back with a fresh perspective.
+          </label>
+          <label>
+            <input type="radio" name="question1" value="c">
+            c) I seek support and advice from colleagues or mentors.
+          </label>
+          <label>
+            <input type="radio" name="question1" value="d">
+            d) I prioritize tasks and work systematically to manage stress.
+          </label>
+        </div>
+      </div>
+      
+      <div class="question">
+        <p>Question 2: How do you approach working in a team?</p>
+        <div class="options">
+          <label>
+            <input type="radio" name="question2" value="a">
+            a) I actively listen and collaborate with team members.
+          </label>
+          <label>
+            <input type="radio" name="question2" value="b">
+            b) I contribute my ideas and take initiative when needed.
+          </label>
+          <label>
+            <input type="radio" name="question2" value="c">
+            c) I appreciate diverse perspectives and encourage participation from all team members.
+          </label>
+          <label>
+            <input type="radio" name="question2" value="d">
+            d) I delegate tasks and ensure everyone's contribution.
+          </label>
+        </div>
+      </div>
+      
+      <div class="question">
+        <p>Question 3: How do you handle conflicts or disagreements with colleagues?</p>
+        <div class="options">
+          <label>
+            <input type="radio" name="question3" value="a">
+            a) I approach conflicts diplomatically and strive for a win-win solution.
+          </label>
+          <label>
+            <input type="radio" name="question3" value="b">
+            b) I listen to all perspectives and mediate a resolution.
+          </label>
+          <label>
+            <input type="radio" name="question3" value="c">
+            c) I address conflicts directly and seek to understand the underlying issues.
+          </label>
+          <label>
+            <input type="radio" name="question3" value="d">
+            d) I remain objective and find common ground for effective collaboration.
+          </label>
+        </div>
+      </div>
+          <div class="question">
+        <p>Question 4: How do you handle tight deadlines and pressure?</p>
+        <div class="options">
+          <label>
+            <input type="radio" name="question4" value="a">
+            a) I prioritize tasks and work efficiently to meet deadlines.
+          </label>
+          <label>
+            <input type="radio" name="question4" value="b">
+            b) I break down complex tasks into manageable steps.
+          </label>
+          <label>
+            <input type="radio" name="question4" value="c">
+            c) I seek support from colleagues or supervisors when needed.
+          </label>
+          <label>
+            <input type="radio" name="question4" value="d">
+            d) I remain focused and resilient, adapting to changing circumstances.
+          </label>
+        </div>
+      </div>
+      
+      <div class="question">
+        <p>Question 5: How do you stay motivated and productive at work?</p>
+        <div class="options">
+          <label>
+            <input type="radio" name="question5" value="a">
+            a) I set clear goals and track my progress regularly.
+          </label>
+          <label>
+            <input type="radio" name="question5" value="b">
+            b) I find inspiration in challenging projects and continuous learning.
+          </label>
+          <label>
+            <input type="radio" name="question5" value="c">
+            c) I seek feedback and recognize my accomplishments.
+          </label>
+          <label>
+            <input type="radio" name="question5" value="d">
+            d) I maintain a healthy work-life balance and practice self-care.
+          </label>
+        </div>
+      </div>
+      
+      <div class="question">
+        <p>Question 6: How do you handle feedback or criticism?</p>
+        <div class="options">
+          <label>
+            <input type="radio" name="question6" value="a">
+            a) I appreciate constructive feedback and use it to improve.
+          </label>
+          <label>
+            <input type="radio" name="question6" value="b">
+            b) I reflect on feedback and seek additional perspectives.
+          </label>
+          <label>
+            <input type="radio" name="question6" value="c">
+            c) I ask clarifying questions and address concerns professionally.
+          </label>
+          <label>
+            <input type="radio" name="question6" value="d">
+            d) I view feedback as an opportunity for growth and development.
+          </label>
+        </div>
+      </div>
+      
+      <div class="question">
+        <p>Question 7: How do you approach learning new skills or technologies?</p>
+        <div class="options">
+          <label>
+            <input type="radio" name="question7" value="a">
+            a) I proactively seek learning opportunities and stay updated.
+          </label>
+          <label>
+            <input type="radio" name="question7" value="b">
+            b) I experiment and explore innovative approaches.
+          </label>
+          <label>
+            <input type="radio" name="question7" value="c">
+            c) I collaborate with experts and leverage their knowledge.
+          </label>
+          <label>
+            <input type="radio" name="question7" value="d">
+            d) I develop a structured plan and follow it to acquire new skills.
+
+          </label>
+        </div>
+      </div>
+      
+      <div class="question">
+        <p>Question 8: How do you handle unexpected changes or challenges at work?</p>
+        <div class="options">
+          <label>
+            <input type="radio" name="question8" value="a">
+            a) I adapt quickly and find creative solutions.
+          </label>
+          <label>
+            <input type="radio" name="question8" value="b">
+            b) I assess the situation and adjust my plans accordingly.
+          </label>
+          <label>
+            <input type="radio" name="question8" value="c">
+            c) I seek advice and collaborate with colleagues to overcome challenges.
+          </label>
+          <label>
+            <input type="radio" name="question8" value="d">
+            d) I remain calm and composed, finding alternative approaches.
+          </label>
+        </div>
+      </div>
+      
+      <div class="question">
+        <p>Question 9: How do you handle feedback or criticism?</p>
+        <div class="options">
+          <label>
+            <input type="radio" name="question9" value="a">
+            a) I appreciate constructive feedback and use it to grow.
+          </label>
+          <label>
+            <input type="radio" name="question9" value="b">
+            b) I reflect on feedback and evaluate its validity.
+          </label>
+          <label>
+            <input type="radio" name="question9" value="c">
+            c) I seek clarifications and engage in open discussions.
+          </label>
+          <label>
+            <input type="radio" name="question9" value="d">
+            d) I view feedback as an opportunity for improvement.
+          </label>
+        </div>
+      </div>
+      
+      <div class="question">
+        <p>Question 10: How do you approach new challenges or projects?</p>
+        <div class="options">
+          <label>
+            <input type="radio" name="question10" value="a">
+            a) I embrace new challenges and take calculated risks.
+          </label>
+          <label>
+            <input type="radio" name="question10" value="b">
+            b) I analyze the situation and develop a strategic plan.
+          </label>
+          <label>
+            <input type="radio" name="question10" value="c">
+            c) I collaborate with team members and seek their input.
+          </label>
+          <label>
+            <input type="radio" name="question10" value="d">
+            d) I stay flexible and adapt to changing circumstances.
+          </label>
+        </div>
+      </div>
+      
+      <div class="button-container">
+        <button class="submit-button" type="submit">Submit</button>
+      </div>
+      <div class="llcontainer">
+        <div class="col-sm-3 d-flex justify-content-end">
+          <a class="logout-link" href="/logout" style="position: absolute; top: 10px; right: 10px;">Logout</a>
+        </div>
+     </div>
+    </form>
+    <div class="overlay">
+      <div class="popup">
+        <h2 class="result-title">Your Personality Type:</h2>
+        <p class="personality-type">{{ personality_type }}</p>
+        <button class="close-button">Close</button>
+      </div>
+    </div>
+    <script>
+      // Get the necessary elements
+      const overlay = document.querySelector('.overlay');
+      const closeButton = document.querySelector('.close-button');
+      const personalitytype = document.querySelector('.personality-type');
+      
+      // Function to show the popup
+      function showPopup(personalityType) {
+        personalitytype.textContent = personalityType;
+        overlay.style.display = 'flex';
+      }
+    
+      // Function to hide the popup
+      function hidePopup() {
+        overlay.style.display = 'none';
+      }
+    
+      // Show the popup when the form is submitted
+      const form = document.getElementById('personality-form');
+      form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission for demonstration purposes
+        
+        // Simulating the personality type based on the selected answers
+        const personalityType = "You are Ambious and driven";
+        showPopup(personalityType);
+      });
+    
+      // Hide the popup when the close button is clicked
+      closeButton.addEventListener('click', hidePopup);
+    
+    </script>
+    <script>
+   var currentIndex = 0;
+    var cards = document.getElementsByClassName("card");
+
+    function showCard(index) {
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].classList.add("hidden");
+      }
+      cards[index].classList.remove("hidden");
+    }
+
+    showCard(currentIndex);
+
+    function nextInternship() {
+      currentIndex = (currentIndex + 1) % cards.length;
+      showCard(currentIndex);
+    }
+</script>
+
+    
+</body>
+</html>
